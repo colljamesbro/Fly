@@ -1,0 +1,44 @@
+-- Variables to control flying speed and movement
+local flyingSpeed = 50
+local isFlying = false
+
+-- Get the local player and character
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+
+-- Function to start flying
+local function startFlying()
+    isFlying = true
+    humanoid.PlatformStand = true  -- Disables physics to allow flying
+end
+
+-- Function to stop flying
+local function stopFlying()
+    isFlying = false
+    humanoid.PlatformStand = false
+end
+
+-- Toggle flying on and off with the "F" key
+game:GetService("UserInputService").InputBegan:Connect(function(input)
+    if input.KeyCode == Enum.KeyCode.F then
+        if isFlying then
+            stopFlying()
+        else
+            startFlying()
+        end
+    end
+end)
+
+-- Handle flight movement
+game:GetService("RunService").RenderStepped:Connect(function()
+    if isFlying then
+        local camera = workspace.CurrentCamera
+        local moveDirection = Vector3.new(0, 0, 0)
+
+        -- Capture movement input (W, A, S, D, Space, LeftShift)
+        if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.W) then
+            moveDirection = moveDirection + camera.CFrame.LookVector
+        end
+        if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.S) then
+       
